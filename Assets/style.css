@@ -4,3 +4,12 @@ color: white;
 text-align: center;
 
 }
+
+.hide {
+display: none;
+}
+
+#icon {
+padding-left: 70px;
+
+}
