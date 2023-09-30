@@ -3,9 +3,32 @@ var apiKey = "2deeb2a69137fff43aae291e7205b285"
 var weatherAPI = "https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid=2deeb2a69137fff43aae291e7205b285"
 var city = ""
 var weatherDetails = $("#weather-details")
+var fiveDayWeather = $("#five-day-weather")
 var imgURL = ""
 var imgWeather = $("#icon")
 var cityFirstLetter = ""
+var timerPage = $('#currentDay')
+var currentDay = dayjs().format('MMM D, YYYY');
+
+
+var timerPage1 = $('#day-one')
+var dayOne = dayjs().add(1, 'day').format('MMM D, YYYY');
+
+var timerPage2 = $('#day-two')
+var dayTwo = dayjs().add(2, 'day').format('MMM D, YYYY');
+
+var timerPage3 = $('#day-three')
+var dayThree = dayjs().add(3, 'day').format('MMM D, YYYY');
+
+var timerPage4 = $('#day-four')
+var dayFour = dayjs().add(4, 'day').format('MMM D, YYYY');
+
+var timerPage5 = $('#day-five')
+var dayFive = dayjs().add(5, 'day').format('MMM D, YYYY');
+
+
+
+timerPage.text(currentDay)
 
 $("#search").on("click",function(event) {
   event.preventDefault()
@@ -69,18 +92,22 @@ function fiveDayForecast() {
       imgURL = 'http://openweathermap.org/img/w/'+imgIcon+'.png'
     imgWeather.attr('src',imgURL)
     weatherDetails.removeAttr('class')
+    fiveDayWeather.removeAttr('class')
     
     $("#current-weather").text("Current Weather in " + city)
     $("#temp").text("Temperature:" + temperature + " degrees")
     $("#speed").text("Wind Speed:" + windSpeed + " mph")
     $("#description").text("Description:" + weatherDescription)
     $("#humidity").text("Humidity:" + humidity + "%")
+
+    timerPage1.text(dayOne)
+    timerPage2.text(dayTwo)
+    timerPage3.text(dayThree)
+    timerPage4.text(dayFour)
+    timerPage5.text(dayFive)
     
 
   
    
   });
 }
-
-
-// 'http://openweathermap.org/img/w/${icon}.png'
