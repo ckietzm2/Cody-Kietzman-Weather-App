@@ -16,14 +16,17 @@ var imgURL4 = ""
 var imgWeather4 = $("#icon4")
 var imgURL5 = ""
 var imgWeather5 = $("#icon5")
+var cityStorage = $("#city-name")
+var cityList = $("#list")
 
 
+// Creates current day using js
 var cityFirstLetter = ""
 var timerPage = $('#currentDay')
 var currentDay = dayjs().format('MMM D, YYYY');
-var data = ""
-var checkDay = 0
 
+
+// Created data for 5 days by adding days
 
 var timerPage1 = $('#day-one')
 var dayOne = dayjs().add(1, 'day').format('MMM D, YYYY');
@@ -40,19 +43,16 @@ var dayFour = dayjs().add(4, 'day').format('MMM D, YYYY');
 var timerPage5 = $('#day-five')
 var dayFive = dayjs().add(5, 'day').format('MMM D, YYYY');
 
-var currentYear = dayjs().format('YYYY')
-var currentMonth = dayjs().format('MM')
-var currentDTE = dayjs().add(5, 'hour').format('DD')
-var currentDate = currentYear+"-"+currentMonth+"-"+currentDTE+" 09:00:00"
-
-
-
+// Put current Day on heading
 timerPage.text(currentDay)
 
+
+// On click of search button saves input city for city data
 $("#search").on("click",function(event) {
   event.preventDefault()
   
   city = $("#city-name").val()
+ 
 
 cityFirstLetter=city.charAt(0).toUpperCase()
 city=cityFirstLetter+city.slice(1)
@@ -75,8 +75,21 @@ city=cityFirstLetter+city.slice(1)
 
 function getWeather() {
 
+  
+  cityStorage = localStorage.setItem("cityStorage",JSON.stringify(city))
+  cityStorage = JSON.parse(localStorage.getItem("cityStorage")) || []
+  cityList=cityList.append('<button>'+cityStorage)
 
-var requestURL = "http://api.openweathermap.org/data/2.5/forecast?appid=c04c273159790588c5d89056e8655cce&units=imperial&q="+city
+  $(cityList).on("click",function(event) {
+    event.preventDefault()
+
+    city=cityList.val()
+    console.log(city)
+
+  })
+
+
+var requestURL = "https://api.openweathermap.org/data/2.5/forecast?appid=c04c273159790588c5d89056e8655cce&units=imperial&q="+city
 
 
 fetch(requestURL)
@@ -85,31 +98,22 @@ fetch(requestURL)
   })
   .then(function (data) {
     
-    // var lat = data.city.coord.lat
-    // var lon = data.city.coord.lon
-    
-    // weatherAPI = "https://api.openweathermap.org/data/2.5/forecast?lat="+lat+"&lon="+lon+"&appid=2deeb2a69137fff43aae291e7205b285"
 
-  // fetch(weatherAPI)
-  // .then(function (response) {
-    // return response.json();
-  // })
-  // .then(function (data) {
-   
+  //  Grabs first item in data as that is the most current weather
 
   var temperature = data.list[0].main.temp
-  // temperature = (((temperature-273.15)*9)/5)+32
     temperature = temperature.toFixed(1)
   var weatherDescription = data.list[0].weather[0].description
   var windSpeed = data.list[0].wind.speed
     windSpeed = windSpeed.toFixed(1)
   var humidity = data.list[0].main.humidity
   var imgIcon = data.list[0].weather[0].icon
-      imgURL = 'http://openweathermap.org/img/w/'+imgIcon+'.png'
+      imgURL = 'https://openweathermap.org/img/w/'+imgIcon+'.png'
     
     imgWeather.attr('src',imgURL)
     weatherDetails.removeAttr('class')
     fiveDayWeather.removeAttr('class')
+    cityList.removeAttr('class')
     
     $("#current-weather").text("Current Weather in " + city)
     $("#temp").text("Temperature:" + temperature + " degrees")
@@ -117,21 +121,14 @@ fetch(requestURL)
     $("#description").text("Description:" + weatherDescription)
     $("#humidity").text("Humidity:" + humidity + "%")
 
-   
-   
-
-
-
-
-
-   
+  //  Shows the date for each card
   timerPage1.text(dayOne)
   timerPage2.text(dayTwo)
   timerPage3.text(dayThree)
   timerPage4.text(dayFour)
   timerPage5.text(dayFive)
   
-  console.log(data)
+// Creates a loop to grab the first time at 3 PM and then add 8 to i to get 3 PM data for each day
     
   for(let i=0;i<8;i++) {
     
@@ -143,7 +140,6 @@ fetch(requestURL)
       if (timeText==="15:00:00") {
           
           var temperature1 = data.list[i].main.temp
-          // temperature1 = (((temperature1-273.15)*9)/5)+32
           temperature1 = temperature1.toFixed(1)
           var weatherDescription1 = data.list[i].weather[0].description
   var windSpeed1 = data.list[i].wind.speed
@@ -151,7 +147,7 @@ fetch(requestURL)
   var humidity1 = data.list[i].main.humidity
   
   var imgIcon1 = data.list[i].weather[0].icon
-      imgURL1 = 'http://openweathermap.org/img/w/'+imgIcon1+'.png'
+      imgURL1 = 'https://openweathermap.org/img/w/'+imgIcon1+'.png'
     
     imgWeather1.attr('src',imgURL1)
 
@@ -170,7 +166,7 @@ var windSpeed2 = data.list[i+8].wind.speed
 var humidity2 = data.list[i+8].main.humidity
 
 var imgIcon2 = data.list[i+16].weather[0].icon
-    imgURL2 = 'http://openweathermap.org/img/w/'+imgIcon2+'.png'
+    imgURL2 = 'https://openweathermap.org/img/w/'+imgIcon2+'.png'
   
   imgWeather2.attr('src',imgURL2)
 
@@ -188,7 +184,7 @@ var windSpeed3 = data.list[i+16].wind.speed
 var humidity3 = data.list[i+16].main.humidity
 
 var imgIcon3 = data.list[i+16].weather[0].icon
-    imgURL3 = 'http://openweathermap.org/img/w/'+imgIcon3+'.png'
+    imgURL3 = 'https://openweathermap.org/img/w/'+imgIcon3+'.png'
   
   imgWeather3.attr('src',imgURL3)
 
@@ -205,7 +201,7 @@ var windSpeed4 = data.list[i+24].wind.speed
 var humidity4 = data.list[i+24].main.humidity
 
 var imgIcon4 = data.list[i+24].weather[0].icon
-    imgURL4 = 'http://openweathermap.org/img/w/'+imgIcon4+'.png'
+    imgURL4 = 'https://openweathermap.org/img/w/'+imgIcon4+'.png'
   
   imgWeather4.attr('src',imgURL4)
 
@@ -222,7 +218,7 @@ var windSpeed5 = data.list[i+32].wind.speed
 var humidity5 = data.list[i+32].main.humidity
 
 var imgIcon5 = data.list[i+32].weather[0].icon
-    imgURL5 = 'http://openweathermap.org/img/w/'+imgIcon5+'.png'
+    imgURL5 = 'https://openweathermap.org/img/w/'+imgIcon5+'.png'
   
   imgWeather5.attr('src',imgURL5)
 
